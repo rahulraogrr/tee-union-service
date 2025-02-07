@@ -3,7 +3,6 @@ package com.tee.union.services.impl;
 import com.tee.union.dto.staticdata.BaseLookupDto;
 import com.tee.union.mapper.DtoMapper;
 import com.tee.union.services.StaticDataService;
-import com.tee.union.utils.LookupUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.jdbc.core.JdbcTemplate;
