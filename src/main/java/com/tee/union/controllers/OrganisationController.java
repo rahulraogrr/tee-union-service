@@ -12,8 +12,8 @@ import java.util.Optional;
 
 @Slf4j
 @RestController
-@RequestMapping("/api/v1/organisation")
-@Tag(name = "organisation", description = "OrganisationController")
+@RequestMapping("/api/v1/organisations")
+@Tag(name = "organisations", description = "OrganisationController")
 public class OrganisationController {
     private final OrganisationService organisationService;
 
