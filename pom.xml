@@ -86,11 +86,6 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-cache</artifactId>
         </dependency>
-        <dependency>
-            <groupId>com.querydsl</groupId>
-            <artifactId>querydsl-sql</artifactId>
-            <version>5.1.0</version> <!-- Check for the latest version -->
-        </dependency>
     </dependencies>
 
     <build>
