@@ -1,6 +1,6 @@
 databaseChangeLog:
   - changeSet:
-      id: 011-1
+      id: 001
       author: Rahul Rao Gonda
       comment: insert-static-data
       changes:
@@ -137,13 +137,6 @@ databaseChangeLog:
             tableName: user_statuses
             columns:
               - column: { name: name, value: "RETIRED" }
-              - column: { name: description, value: "User has retired" }
-              - column: { name: created_at, value: NOW() }
-              - column: { name: updated_at, value: NOW() }
-        - insert:
-            tableName: user_statuses
-            columns:
-              - column: { name: name, value: "SUSPENDED" }
               - column: { name: description, value: "User has retired" }
               - column: { name: created_at, value: NOW() }
               - column: { name: updated_at, value: NOW() }
@@ -404,5 +397,35 @@ databaseChangeLog:
             columns:
               - column: { name: name, value: "VERIFICATION_REQUIRED" }
               - column: { name: description, value: "The user needs to verify their identity through methods like email verification or phone number verification" }
+              - column: { name: created_at, value: NOW() }
+              - column: { name: updated_at, value: NOW() }
+
+        # Insert data into entity_type
+        - insert:
+            tableName: payment_status
+            columns:
+              - column: { name: name, value: "PENDING" }
+              - column: { name: description, value: "Pending payment" }
+              - column: { name: created_at, value: NOW() }
+              - column: { name: updated_at, value: NOW() }
+        - insert:
+            tableName: payment_status
+            columns:
+              - column: { name: name, value: "COMPLETED" }
+              - column: { name: description, value: "Pending completed" }
+              - column: { name: created_at, value: NOW() }
+              - column: { name: updated_at, value: NOW() }
+        - insert:
+            tableName: payment_status
+            columns:
+              - column: { name: name, value: "FAILED" }
+              - column: { name: description, value: "Failed payment" }
+              - column: { name: created_at, value: NOW() }
+              - column: { name: updated_at, value: NOW() }
+        - insert:
+            tableName: payment_status
+            columns:
+              - column: { name: name, value: "UNKNOWN" }
+              - column: { name: description, value: "Unknown status" }
               - column: { name: created_at, value: NOW() }
               - column: { name: updated_at, value: NOW() }

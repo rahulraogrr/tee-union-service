@@ -12,7 +12,8 @@ public enum LookupTable {
     GENDERS("genders", "GenderDto"),
     MARITAL_STATUSES("marital_statuses", "MaritalStatusDto"),
     PAYMENT_METHODS("payment_methods", "PaymentMethodDto"),
-    LOGIN_STATUS("login_status", "LoginStatusDto");
+    LOGIN_STATUS("login_status", "LoginStatusDto"),
+    PAYMENT_STATUS("payment_status", "PaymentStatusDto");
 
     private final String tableName;
     private final String className;
