@@ -1,0 +1,408 @@
+databaseChangeLog:
+  - changeSet:
+      id: 011-1
+      author: Rahul Rao Gonda
+      comment: insert-static-data
+      changes:
+        # Insert data into entity_type
+        - insert:
+            tableName: entity_type
+            columns:
+              - column: { name: name, value: "USER" }
+              - column: { name: description, value: "An individual user" }
+              - column: { name: created_at, value: NOW() }
+              - column: { name: updated_at, value: NOW() }
+        - insert:
+            tableName: entity_type
+            columns:
+              - column: { name: name, value: "ORGANISATION" }
+              - column: { name: description, value: "An organization entity" }
+              - column: { name: created_at, value: NOW() }
+              - column: { name: updated_at, value: NOW() }
+        - insert:
+            tableName: entity_type
+            columns:
+              - column: { name: name, value: "UNION" }
+              - column: { name: description, value: "A union entity" }
+              - column: { name: created_at, value: NOW() }
+              - column: { name: updated_at, value: NOW() }
+
+        # Insert data into ticket_statuses
+        - insert:
+            tableName: ticket_statuses
+            columns:
+              - column: { name: name, value: "OPEN" }
+              - column: { name: description, value: "The ticket is open and requires attention" }
+              - column: { name: created_at, value: NOW() }
+              - column: { name: updated_at, value: NOW() }
+        - insert:
+            tableName: ticket_statuses
+            columns:
+              - column: { name: name, value: "IN_PROGRESS" }
+              - column: { name: description, value: "The ticket is currently being worked on" }
+              - column: { name: created_at, value: NOW() }
+              - column: { name: updated_at, value: NOW() }
+        - insert:
+            tableName: ticket_statuses
+            columns:
+              - column: { name: name, value: "ESCALATED" }
+              - column: { name: description, value: "The ticket has been escalated to higher support" }
+              - column: { name: created_at, value: NOW() }
+              - column: { name: updated_at, value: NOW() }
+        - insert:
+            tableName: ticket_statuses
+            columns:
+              - column: { name: name, value: "CLOSED" }
+              - column: { name: description, value: "The ticket is resolved and closed" }
+              - column: { name: created_at, value: NOW() }
+              - column: { name: updated_at, value: NOW() }
+
+        # Insert data into log_actions
+        - insert:
+            tableName: log_actions
+            columns:
+              - column: { name: name, value: "STATUS_CHANGE" }
+              - column: { name: description, value: "Indicates a change in status" }
+              - column: { name: created_at, value: NOW() }
+              - column: { name: updated_at, value: NOW() }
+        - insert:
+            tableName: log_actions
+            columns:
+              - column: { name: name, value: "ESCALATION" }
+              - column: { name: description, value: "Indicates that an issue was escalated" }
+              - column: { name: created_at, value: NOW() }
+              - column: { name: updated_at, value: NOW() }
+        - insert:
+            tableName: log_actions
+            columns:
+              - column: { name: name, value: "COMMENT" }
+              - column: { name: description, value: "A user added a comment" }
+              - column: { name: created_at, value: NOW() }
+              - column: { name: updated_at, value: NOW() }
+
+        # Insert data into priorities
+        - insert:
+            tableName: priorities
+            columns:
+              - column: { name: name, value: "LOW" }
+              - column: { name: description, value: "Low priority" }
+              - column: { name: sla_duration, value: "48 hours" }
+              - column: { name: weight, valueNumeric: 1 }
+              - column: { name: created_at, value: NOW() }
+              - column: { name: updated_at, value: NOW() }
+        - insert:
+            tableName: priorities
+            columns:
+              - column: { name: name, value: "MEDIUM" }
+              - column: { name: description, value: "Medium priority" }
+              - column: { name: sla_duration, value: "24 hours" }
+              - column: { name: weight, valueNumeric: 2 }
+              - column: { name: created_at, value: NOW() }
+              - column: { name: updated_at, value: NOW() }
+        - insert:
+            tableName: priorities
+            columns:
+              - column: { name: name, value: "HIGH" }
+              - column: { name: description, value: "High priority" }
+              - column: { name: sla_duration, value: "8 hours" }
+              - column: { name: weight, valueNumeric: 3 }
+              - column: { name: created_at, value: NOW() }
+              - column: { name: updated_at, value: NOW() }
+        - insert:
+            tableName: priorities
+            columns:
+              - column: { name: name, value: "CRITICAL" }
+              - column: { name: description, value: "Critical priority" }
+              - column: { name: sla_duration, value: "2 hours" }
+              - column: { name: weight, valueNumeric: 4 }
+              - column: { name: created_at, value: NOW() }
+              - column: { name: updated_at, value: NOW() }
+
+        # Insert data into user_statuses
+        - insert:
+            tableName: user_statuses
+            columns:
+              - column: { name: name, value: "ACTIVE" }
+              - column: { name: description, value: "User is active" }
+              - column: { name: created_at, value: NOW() }
+              - column: { name: updated_at, value: NOW() }
+        - insert:
+            tableName: user_statuses
+            columns:
+              - column: { name: name, value: "INACTIVE" }
+              - column: { name: description, value: "User is inactive" }
+              - column: { name: created_at, value: NOW() }
+              - column: { name: updated_at, value: NOW() }
+        - insert:
+            tableName: user_statuses
+            columns:
+              - column: { name: name, value: "RETIRED" }
+              - column: { name: description, value: "User has retired" }
+              - column: { name: created_at, value: NOW() }
+              - column: { name: updated_at, value: NOW() }
+        - insert:
+            tableName: user_statuses
+            columns:
+              - column: { name: name, value: "SUSPENDED" }
+              - column: { name: description, value: "User has retired" }
+              - column: { name: created_at, value: NOW() }
+              - column: { name: updated_at, value: NOW() }
+
+        # Insert data into address_types
+        - insert:
+            tableName: address_types
+            columns:
+              - column: { name: name, value: "HOME" }
+              - column: { name: description, value: "Home address" }
+              - column: { name: created_at, value: NOW() }
+              - column: { name: updated_at, value: NOW() }
+        - insert:
+            tableName: address_types
+            columns:
+              - column: { name: name, value: "WORK" }
+              - column: { name: description, value: "Work address" }
+              - column: { name: created_at, value: NOW() }
+              - column: { name: updated_at, value: NOW() }
+        - insert:
+            tableName: address_types
+            columns:
+              - column: { name: name, value: "BRANCH" }
+              - column: { name: description, value: "Branch office address" }
+              - column: { name: created_at, value: NOW() }
+              - column: { name: updated_at, value: NOW() }
+
+        # Insert data into notification_types
+        - insert:
+            tableName: notification_types
+            columns:
+              - column: { name: name, value: "EVENT_UPDATE" }
+              - column: { name: description, value: "Notification about an event update" }
+              - column: { name: created_at, value: NOW() }
+              - column: { name: updated_at, value: NOW() }
+        - insert:
+            tableName: notification_types
+            columns:
+              - column: { name: name, value: "ANNOUNCEMENT" }
+              - column: { name: description, value: "A general announcement" }
+              - column: { name: created_at, value: NOW() }
+              - column: { name: updated_at, value: NOW() }
+        - insert:
+            tableName: notification_types
+            columns:
+              - column: { name: name, value: "EMERGENCY" }
+              - column: { name: description, value: "Emergency notification" }
+              - column: { name: created_at, value: NOW() }
+              - column: { name: updated_at, value: NOW() }
+
+        # Insert data into genders
+        - insert:
+            tableName: genders
+            columns:
+              - column: { name: name, value: "MALE" }
+              - column: { name: description, value: "Male gender" }
+              - column: { name: created_at, value: NOW() }
+              - column: { name: updated_at, value: NOW() }
+        - insert:
+            tableName: genders
+            columns:
+              - column: { name: name, value: "FEMALE" }
+              - column: { name: description, value: "Female gender" }
+              - column: { name: created_at, value: NOW() }
+              - column: { name: updated_at, value: NOW() }
+        - insert:
+            tableName: genders
+            columns:
+              - column: { name: name, value: "OTHER" }
+              - column: { name: description, value: "Other or non-binary gender" }
+              - column: { name: created_at, value: NOW() }
+              - column: { name: updated_at, value: NOW() }
+
+        # Insert data into marital_statuses
+        - insert:
+            tableName: marital_statuses
+            columns:
+              - column: { name: name, value: "SINGLE" }
+              - column: { name: description, value: "Not married" }
+              - column: { name: created_at, value: NOW() }
+              - column: { name: updated_at, value: NOW() }
+        - insert:
+            tableName: marital_statuses
+            columns:
+              - column: { name: name, value: "MARRIED" }
+              - column: { name: description, value: "Currently married" }
+              - column: { name: created_at, value: NOW() }
+              - column: { name: updated_at, value: NOW() }
+        - insert:
+            tableName: marital_statuses
+            columns:
+              - column: { name: name, value: "DIVORCED" }
+              - column: { name: description, value: "Legally divorced" }
+              - column: { name: created_at, value: NOW() }
+              - column: { name: updated_at, value: NOW() }
+        - insert:
+            tableName: marital_statuses
+            columns:
+              - column: { name: name, value: "WIDOWED" }
+              - column: { name: description, value: "Lost spouse" }
+              - column: { name: created_at, value: NOW() }
+              - column: { name: updated_at, value: NOW() }
+        - insert:
+            tableName: marital_statuses
+            columns:
+              - column: { name: name, value: "SEPARATED" }
+              - column: { name: description, value: "Living separately but not divorced" }
+              - column: { name: created_at, value: NOW() }
+              - column: { name: updated_at, value: NOW() }
+
+        # Insert data into roles
+        - insert:
+            tableName: roles
+            columns:
+              - column: { name: name, value: "ADMIN"}
+              - column: { name: description, value: "Administrator with full access"}
+              - column: { name: created_at, value: NOW() }
+              - column: { name: updated_at, value: NOW() }
+        - insert:
+            tableName: roles
+            columns:
+              - column: { name: name, value: "MANAGER" }
+              - column: { name: description, value: "Manager with higher privileges" }
+              - column: { name: created_at, value: NOW() }
+              - column: { name: updated_at, value: NOW() }
+        - insert:
+            tableName: roles
+            columns:
+              - column: { name: name, value: "USER" }
+              - column: { name: description, value: "Regular user with standard permissions" }
+              - column: { name: created_at, value: NOW() }
+              - column: { name: updated_at, value: NOW() }
+        - insert:
+            tableName: roles
+            columns:
+              - column: { name: name, value: "IT" }
+              - column: { name: description, value: "IT support and maintenance role" }
+              - column: { name: created_at, value: NOW() }
+              - column: { name: updated_at, value: NOW() }
+        - insert:
+            tableName: roles
+            columns:
+              - column: { name: name, value: "SUPER_USER" }
+              - column: { name: description, value: "User with elevated privileges" }
+              - column: { name: created_at, value: NOW() }
+              - column: { name: updated_at, value: NOW() }
+
+        # Insert data into payment_methods
+        - insert:
+            tableName: payment_methods
+            columns:
+              - column: { name: name, value: "CREDIT_CARD" }
+              - column: { name: description, value: "Payment via credit card" }
+              - column: { name: created_at, value: NOW() }
+              - column: { name: updated_at, value: NOW() }
+        - insert:
+            tableName: payment_methods
+            columns:
+              - column: { name: name, value: "DEBIT_CARD" }
+              - column: { name: description, value: "Payment via debit card" }
+              - column: { name: created_at, value: NOW() }
+              - column: { name: updated_at, value: NOW() }
+        - insert:
+            tableName: payment_methods
+            columns:
+              - column: { name: name, value: "PAYPAL" }
+              - column: { name: description, value: "Payment via PayPal" }
+              - column: { name: created_at, value: NOW() }
+              - column: { name: updated_at, value: NOW() }
+        - insert:
+            tableName: payment_methods
+            columns:
+              - column: { name: name, value: "BANK_TRANSFER" }
+              - column: { name: description, value: "Payment via direct bank transfer" }
+              - column: { name: created_at, value: NOW() }
+              - column: { name: updated_at, value: NOW() }
+        - insert:
+            tableName: payment_methods
+            columns:
+              - column: { name: name, value: "GOOGLE_PAY" }
+              - column: { name: description, value: "Payment via google pay" }
+              - column: { name: created_at, value: NOW() }
+              - column: { name: updated_at, value: NOW() }
+        - insert:
+            tableName: payment_methods
+            columns:
+              - column: { name: name, value: "APPLE_PAY" }
+              - column: { name: description, value: "Payment via apple pay" }
+              - column: { name: created_at, value: NOW() }
+              - column: { name: updated_at, value: NOW() }
+
+        # Insert data into login_status
+        - insert:
+            tableName: login_status
+            columns:
+              - column: { name: name, value: "SUCCESS" }
+              - column: { name: description, value: "Indicates that the user has successfully logged in" }
+              - column: { name: created_at, value: NOW() }
+              - column: { name: updated_at, value: NOW() }
+        - insert:
+            tableName: login_status
+            columns:
+              - column: { name: name, value: "FAILED" }
+              - column: { name: description, value: "Represents a failed login attempt due to incorrect credentials, or any other reason that prevents successful login" }
+              - column: { name: created_at, value: NOW() }
+              - column: { name: updated_at, value: NOW() }
+        - insert:
+            tableName: login_status
+            columns:
+              - column: { name: name, value: "LOCKED" }
+              - column: { name: description, value: "The account is locked due to too many failed login attempts or security policy violations (e.g., entering incorrect credentials multiple times)" }
+              - column: { name: created_at, value: NOW() }
+              - column: { name: updated_at, value: NOW() }
+        - insert:
+            tableName: login_status
+            columns:
+              - column: { name: name, value: "EXPIRED" }
+              - column: { name: description, value: "The user’s session or authentication token has expired, meaning they need to log in again" }
+              - column: { name: created_at, value: NOW() }
+              - column: { name: updated_at, value: NOW() }
+        - insert:
+            tableName: login_status
+            columns:
+              - column: { name: name, value: "INACTIVE" }
+              - column: { name: description, value: "The user’s account is inactive, possibly due to a deactivated account or suspension" }
+              - column: { name: created_at, value: NOW() }
+              - column: { name: updated_at, value: NOW() }
+        - insert:
+            tableName: login_status
+            columns:
+              - column: { name: name, value: "PENDING" }
+              - column: { name: description, value: "The login is still being processed or is waiting for approval (e.g., during a multi-factor authentication process or account verification)" }
+              - column: { name: created_at, value: NOW() }
+              - column: { name: updated_at, value: NOW() }
+        - insert:
+            tableName: login_status
+            columns:
+              - column: { name: name, value: "BANNED" }
+              - column: { name: description, value: "The user is banned from logging in due to a violation of terms or other administrative actions" }
+              - column: { name: created_at, value: NOW() }
+              - column: { name: updated_at, value: NOW() }
+        - insert:
+            tableName: login_status
+            columns:
+              - column: { name: name, value: "DISCONNECTED" }
+              - column: { name: description, value: "The user was logged out due to session expiration or forced logout by the system (e.g., user logged out from another device)" }
+              - column: { name: created_at, value: NOW() }
+              - column: { name: updated_at, value: NOW() }
+        - insert:
+            tableName: login_status
+            columns:
+              - column: { name: name, value: "TIMED_OUT" }
+              - column: { name: description, value: "The login attempt was aborted because it took too long (e.g., a timeout during authentication)" }
+              - column: { name: created_at, value: NOW() }
+              - column: { name: updated_at, value: NOW() }
+        - insert:
+            tableName: login_status
+            columns:
+              - column: { name: name, value: "VERIFICATION_REQUIRED" }
+              - column: { name: description, value: "The user needs to verify their identity through methods like email verification or phone number verification" }
+              - column: { name: created_at, value: NOW() }
+              - column: { name: updated_at, value: NOW() }

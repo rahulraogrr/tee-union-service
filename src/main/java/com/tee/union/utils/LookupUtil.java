@@ -24,6 +24,7 @@ public class LookupUtil {
         lookupMap.put(LookupTable.GENDERS, GenderDto.class);
         lookupMap.put(LookupTable.MARITAL_STATUSES, MaritalStatusDto.class);
         lookupMap.put(LookupTable.PAYMENT_METHODS, PaymentMethodDto.class);
+        lookupMap.put(LookupTable.LOGIN_STATUS, LoginStatusDto.class);
     }
 
     public Class<? extends BaseLookupDto> getDtoClass(LookupTable lookupTable) {

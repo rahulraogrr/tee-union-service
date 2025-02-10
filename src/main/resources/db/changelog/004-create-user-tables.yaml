@@ -1,0 +1,439 @@
+databaseChangeLog:
+  - changeSet:
+      id: 004-1
+      comment: create-users-table
+      author: Rahul Rao Gonda
+      changes:
+        - createTable:
+            tableName: users
+            columns:
+              - column:
+                  name: id
+                  type: BIGSERIAL
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: union_id
+                  type: BIGINT
+              - column:
+                  name: email
+                  type: VARCHAR(320)
+                  constraints:
+                    unique: true
+                    nullable: false
+              - column:
+                  name: phone
+                  type: VARCHAR(15)
+                  constraints:
+                    unique: true
+              - column:
+                  name: password_hash
+                  type: TEXT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: password_salt
+                  type: VARCHAR(64)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: first_name
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: middle_name
+                  type: VARCHAR(255)
+              - column:
+                  name: last_name
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: status_id
+                  type: SMALLINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: TIMESTAMP
+                  defaultValueComputed: NOW()
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: TIMESTAMP
+                  defaultValueComputed: NOW()
+                  constraints:
+                    nullable: false
+              - column:
+                  name: deleted_at
+                  type: TIMESTAMP
+              - column:
+                  name: is_biometric_enabled
+                  type: BOOLEAN
+                  defaultValue: false
+
+  - changeSet:
+      id: 004-1a
+      comment: add-foreign-keys-to-users
+      author: Rahul Rao Gonda
+      changes:
+        - addForeignKeyConstraint:
+            baseTableName: users
+            baseColumnNames: union_id
+            referencedTableName: unions
+            referencedColumnNames: id
+            constraintName: fk_users_unions
+            onDelete: SET NULL
+
+        - addForeignKeyConstraint:
+            baseTableName: users
+            baseColumnNames: status_id
+            referencedTableName: user_statuses
+            referencedColumnNames: id
+            constraintName: fk_users_statuses
+            onDelete: RESTRICT
+
+  - changeSet:
+      id: 004-1b
+      comment: create-indexes-on-users
+      author: Rahul Rao Gonda
+      changes:
+        - createIndex:
+            tableName: users
+            indexName: idx_users_email
+            columns:
+              - column:
+                  name: email
+        - createIndex:
+            tableName: users
+            indexName: idx_users_phone
+            columns:
+              - column:
+                  name: phone
+        - createIndex:
+            tableName: users
+            indexName: idx_users_status
+            columns:
+              - column:
+                  name: status_id
+        - createIndex:
+            tableName: users
+            indexName: idx_users_union_id
+            columns:
+              - column:
+                  name: union_id
+
+  - changeSet:
+      id: 004-2
+      comment: create-user-personal-details-table
+      author: Rahul Rao Gonda
+      changes:
+        - createTable:
+            tableName: user_personal_details
+            columns:
+              - column:
+                  name: id
+                  type: BIGSERIAL
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: user_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: blood_group
+                  type: VARCHAR(5)
+              - column:
+                  name: marital_status_id
+                  type: SMALLINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: marriage_anniversary_date
+                  type: DATE
+              - column:
+                  name: date_of_birth
+                  type: DATE
+              - column:
+                  name: gender_id
+                  type: SMALLINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: nationality
+                  type: VARCHAR(100)
+              - column:
+                  name: created_at
+                  type: TIMESTAMP
+                  defaultValueComputed: NOW()
+              - column:
+                  name: updated_at
+                  type: TIMESTAMP
+                  defaultValueComputed: NOW()
+              - uniqueConstraint:
+                  columnNames: user_id
+                  constraintName: unique_user_personal_details
+
+  - changeSet:
+      id: 004-2a
+      comment: add-foreign-keys-to-user-personal-details
+      author: Rahul Rao Gonda
+      changes:
+        - addForeignKeyConstraint:
+            baseTableName: user_personal_details
+            baseColumnNames: user_id
+            referencedTableName: users
+            referencedColumnNames: id
+            constraintName: fk_user_personal_details_users
+            onDelete: CASCADE
+        - addForeignKeyConstraint:
+            baseTableName: user_personal_details
+            baseColumnNames: marital_status_id
+            referencedTableName: marital_statuses
+            referencedColumnNames: id
+            constraintName: fk_user_personal_details_marital_statuses
+            onDelete: RESTRICT
+        - addForeignKeyConstraint:
+            baseTableName: user_personal_details
+            baseColumnNames: gender_id
+            referencedTableName: genders
+            referencedColumnNames: id
+            constraintName: fk_user_personal_details_genders
+            onDelete: RESTRICT
+
+  - changeSet:
+      id: 004-3
+      comment: create-user-roles-table
+      author: Rahul Rao Gonda
+      changes:
+        - createTable:
+            tableName: user_roles
+            columns:
+              - column:
+                  name: user_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: role_id
+                  type: smallint
+                  constraints:
+                    nullable: false
+              - column:
+                  name: assigned_at
+                  type: TIMESTAMP
+                  defaultValueComputed: NOW()
+              - primaryKey:
+                  columnNames: user_id, role_id
+
+  - changeSet:
+      id: 004-3a
+      comment: add-foreign-keys-to-user-roles
+      author: Rahul Rao Gonda
+      changes:
+        - addForeignKeyConstraint:
+            baseTableName: user_roles
+            baseColumnNames: user_id
+            referencedTableName: users
+            referencedColumnNames: id
+            constraintName: fk_user_roles_users
+            onDelete: CASCADE
+        - addForeignKeyConstraint:
+            baseTableName: user_roles
+            baseColumnNames: role_id
+            referencedTableName: roles
+            referencedColumnNames: id
+            constraintName: fk_user_roles_roles
+            onDelete: CASCADE
+
+  - changeSet:
+      id: 004-4
+      comment: create-biometric-data-table
+      author: Rahul Rao Gonda
+      changes:
+        - createTable:
+            tableName: biometric_data
+            columns:
+              - column:
+                  name: id
+                  type: BIGSERIAL
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: user_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: fingerprint_hash
+                  type: TEXT
+              - column:
+                  name: face_id_hash
+                  type: TEXT
+              - column:
+                  name: created_at
+                  type: TIMESTAMP
+                  defaultValueComputed: NOW()
+
+  - changeSet:
+      id: 004-4a
+      comment: add-foreign-key-to-biometric-data
+      author: Rahul Rao Gonda
+      changes:
+        - addForeignKeyConstraint:
+            baseTableName: biometric_data
+            baseColumnNames: user_id
+            referencedTableName: users
+            referencedColumnNames: id
+            constraintName: fk_biometric_data_users
+            onDelete: CASCADE
+
+  - changeSet:
+      id: 004-4b
+      comment: create-index-on-biometric-data
+      author: Rahul Rao Gonda
+      changes:
+        - createIndex:
+            tableName: biometric_data
+            indexName: idx_biometric_data_user_id
+            columns:
+              - column:
+                  name: user_id
+
+  - changeSet:
+      id: 004-5
+      comment: create-external-logins-table
+      author: Rahul Rao Gonda
+      changes:
+        - createTable:
+            tableName: external_logins
+            columns:
+              - column:
+                  name: id
+                  type: BIGSERIAL
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: user_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: provider_name
+                  type: VARCHAR(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: provider_user_id
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: access_token
+                  type: TEXT
+              - column:
+                  name: refresh_token
+                  type: TEXT
+              - column:
+                  name: created_at
+                  type: TIMESTAMP
+                  defaultValueComputed: NOW()
+              - column:
+                  name: updated_at
+                  type: TIMESTAMP
+                  defaultValueComputed: NOW()
+              - uniqueConstraint:
+                  columnNames: user_id, provider_name
+
+  - changeSet:
+      id: 004-5a
+      comment: add-foreign-key-to-external-logins
+      author: Rahul Rao Gonda
+      changes:
+        - addForeignKeyConstraint:
+            baseTableName: external_logins
+            baseColumnNames: user_id
+            referencedTableName: users
+            referencedColumnNames: id
+            constraintName: fk_external_logins_users
+            onDelete: CASCADE
+
+  - changeSet:
+      id: 004-5b
+      comment: create-index-on-external-logins
+      author: Rahul Rao Gonda
+      changes:
+        - createIndex:
+            tableName: external_logins
+            indexName: idx_external_logins_user_id
+            columns:
+              - column:
+                  name: user_id
+
+  - changeSet:
+      id: 004-6
+      comment: create-user-tokens-table
+      author: Rahul Rao Gonda
+      changes:
+        - createTable:
+            tableName: user_tokens
+            columns:
+              - column:
+                  name: id
+                  type: BIGSERIAL
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: user_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: token
+                  type: TEXT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: expires_at
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: TIMESTAMP
+                  defaultValueComputed: NOW()
+              - column:
+                  name: is_active
+                  type: BOOLEAN
+                  defaultValue: true
+              - uniqueConstraint:
+                  columnNames: token
+                  constraintName: unique_user_tokens_token
+
+  - changeSet:
+      id: 004-6a
+      comment: add-foreign-key-to-user-tokens
+      author: Rahul Rao Gonda
+      changes:
+        - addForeignKeyConstraint:
+            baseTableName: user_tokens
+            baseColumnNames: user_id
+            referencedTableName: users
+            referencedColumnNames: id
+            constraintName: fk_user_tokens_users
+            onDelete: CASCADE
+
+  - changeSet:
+      id: 004-6b
+      comment: create-index-on-user-tokens
+      author: Rahul Rao Gonda
+      changes:
+        - createIndex:
+            tableName: user_tokens
+            indexName: idx_user_tokens_user_id
+            columns:
+              - column:
+                  name: user_id

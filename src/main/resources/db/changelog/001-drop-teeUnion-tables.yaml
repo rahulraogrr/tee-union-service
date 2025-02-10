@@ -1,0 +1,444 @@
+databaseChangeLog:
+  - changeSet:
+      id: 001-1
+      author: Rahul Rao Gonda
+      preConditions:
+        - onFail: MARK_RAN
+          tableExists:
+            tableName: ticket_logs
+      changes:
+        - dropTable:
+            tableName: ticket_logs
+            cascadeConstraints: true
+
+  - changeSet:
+      id: 001-2
+      author: Rahul Rao Gonda
+      preConditions:
+        - onFail: MARK_RAN
+          tableExists:
+            tableName: tickets
+      changes:
+        - dropTable:
+            tableName: tickets
+            cascadeConstraints: true
+
+  - changeSet:
+      id: 001-3
+      author: Rahul Rao Gonda
+      preConditions:
+        - onFail: MARK_RAN
+          tableExists:
+            tableName: escalation_levels
+      changes:
+        - dropTable:
+            tableName: escalation_levels
+            cascadeConstraints: true
+
+  - changeSet:
+      id: 001-4
+      author: Rahul Rao Gonda
+      preConditions:
+        - onFail: MARK_RAN
+          tableExists:
+            tableName: addresses
+      changes:
+        - dropTable:
+            tableName: addresses
+            cascadeConstraints: true
+
+  - changeSet:
+      id: 001-5
+      author: Rahul Rao Gonda
+      preConditions:
+        - onFail: MARK_RAN
+          tableExists:
+            tableName: events
+      changes:
+        - dropTable:
+            tableName: events
+            cascadeConstraints: true
+
+  - changeSet:
+      id: 001-6
+      author: Rahul Rao Gonda
+      preConditions:
+        - onFail: MARK_RAN
+          tableExists:
+            tableName: event_types
+      changes:
+        - dropTable:
+            tableName: event_types
+            cascadeConstraints: true
+
+  - changeSet:
+      id: 001-7
+      author: Rahul Rao Gonda
+      preConditions:
+        - onFail: MARK_RAN
+          tableExists:
+            tableName: user_roles
+      changes:
+        - dropTable:
+            tableName: user_roles
+            cascadeConstraints: true
+
+  - changeSet:
+      id: 001-8
+      author: Rahul Rao Gonda
+      preConditions:
+        - onFail: MARK_RAN
+          tableExists:
+            tableName: users
+      changes:
+        - dropTable:
+            tableName: users
+            cascadeConstraints: true
+
+  - changeSet:
+      id: 001-9
+      author: Rahul Rao Gonda
+      preConditions:
+        - onFail: MARK_RAN
+          tableExists:
+            tableName: genders
+      changes:
+        - dropTable:
+            tableName: genders
+            cascadeConstraints: true
+
+  - changeSet:
+      id: 001-10
+      author: Rahul Rao Gonda
+      preConditions:
+        - onFail: MARK_RAN
+          tableExists:
+            tableName: marital_statuses
+      changes:
+        - dropTable:
+            tableName: marital_statuses
+            cascadeConstraints: true
+
+  - changeSet:
+      id: 001-11
+      author: Rahul Rao Gonda
+      preConditions:
+        - onFail: MARK_RAN
+          tableExists:
+            tableName: user_personal_details
+      changes:
+        - dropTable:
+            tableName: user_personal_details
+            cascadeConstraints: true
+
+  - changeSet:
+      id: 001-12
+      author: Rahul Rao Gonda
+      preConditions:
+        - onFail: MARK_RAN
+          tableExists:
+            tableName: roles
+      changes:
+        - dropTable:
+            tableName: roles
+            cascadeConstraints: true
+
+  - changeSet:
+      id: 001-13
+      author: Rahul Rao Gonda
+      preConditions:
+        - onFail: MARK_RAN
+          tableExists:
+            tableName: priorities
+      changes:
+        - dropTable:
+            tableName: priorities
+            cascadeConstraints: true
+
+  - changeSet:
+      id: 001-14
+      author: Rahul Rao Gonda
+      preConditions:
+        - onFail: MARK_RAN
+          tableExists:
+            tableName: log_actions
+      changes:
+        - dropTable:
+            tableName: log_actions
+            cascadeConstraints: true
+
+  - changeSet:
+      id: 001-15
+      author: Rahul Rao Gonda
+      preConditions:
+        - onFail: MARK_RAN
+          tableExists:
+            tableName: ticket_statuses
+      changes:
+        - dropTable:
+            tableName: ticket_statuses
+            cascadeConstraints: true
+
+  - changeSet:
+      id: 001-16
+      author: Rahul Rao Gonda
+      preConditions:
+        - onFail: MARK_RAN
+          tableExists:
+            tableName: user_statuses
+      changes:
+        - dropTable:
+            tableName: user_statuses
+            cascadeConstraints: true
+
+  - changeSet:
+      id: 001-17
+      author: Rahul Rao Gonda
+      preConditions:
+        - onFail: MARK_RAN
+          tableExists:
+            tableName: address_types
+      changes:
+        - dropTable:
+            tableName: address_types
+            cascadeConstraints: true
+
+  - changeSet:
+      id: 001-18
+      author: Rahul Rao Gonda
+      preConditions:
+        - onFail: MARK_RAN
+          tableExists:
+            tableName: external_logins
+      changes:
+        - dropTable:
+            tableName: external_logins
+            cascadeConstraints: true
+
+  - changeSet:
+      id: 001-19
+      author: Rahul Rao Gonda
+      preConditions:
+        - onFail: MARK_RAN
+          tableExists:
+            tableName: user_tokens
+      changes:
+        - dropTable:
+            tableName: user_tokens
+            cascadeConstraints: true
+
+  - changeSet:
+      id: 001-20
+      author: Rahul Rao Gonda
+      preConditions:
+        - onFail: MARK_RAN
+          tableExists:
+            tableName: user_otps
+      changes:
+        - dropTable:
+            tableName: user_otps
+            cascadeConstraints: true
+
+  - changeSet:
+      id: 001-21
+      author: Rahul Rao Gonda
+      preConditions:
+        - onFail: MARK_RAN
+          tableExists:
+            tableName: regions
+      changes:
+        - dropTable:
+            tableName: regions
+            cascadeConstraints: true
+
+  - changeSet:
+      id: 001-22
+      author: Rahul Rao Gonda
+      preConditions:
+        - onFail: MARK_RAN
+          tableExists:
+            tableName: political_status
+      changes:
+        - dropTable:
+            tableName: political_status
+            cascadeConstraints: true
+
+  - changeSet:
+      id: 001-23
+      author: Rahul Rao Gonda
+      preConditions:
+        - onFail: MARK_RAN
+          tableExists:
+            tableName: countries
+      changes:
+        - dropTable:
+            tableName: countries
+            cascadeConstraints: true
+
+  - changeSet:
+      id: 001-24
+      author: Rahul Rao Gonda
+      preConditions:
+        - onFail: MARK_RAN
+          tableExists:
+            tableName: states
+      changes:
+        - dropTable:
+            tableName: states
+            cascadeConstraints: true
+
+  - changeSet:
+      id: 001-25
+      author: Rahul Rao Gonda
+      preConditions:
+        - onFail: MARK_RAN
+          tableExists:
+            tableName: districts
+      changes:
+        - dropTable:
+            tableName: districts
+            cascadeConstraints: true
+
+  - changeSet:
+      id: 001-26
+      author: Rahul Rao Gonda
+      preConditions:
+        - onFail: MARK_RAN
+          tableExists:
+            tableName: cities
+      changes:
+        - dropTable:
+            tableName: cities
+            cascadeConstraints: true
+
+  - changeSet:
+      id: 001-27
+      author: Rahul Rao Gonda
+      preConditions:
+        - onFail: MARK_RAN
+          tableExists:
+            tableName: priority_escalation_mapping
+      changes:
+        - dropTable:
+            tableName: priority_escalation_mapping
+            cascadeConstraints: true
+
+  - changeSet:
+      id: 001-28
+      author: Rahul Rao Gonda
+      preConditions:
+        - onFail: MARK_RAN
+          tableExists:
+            tableName: audit_logs
+      changes:
+        - dropTable:
+            tableName: audit_logs
+            cascadeConstraints: true
+
+  - changeSet:
+      id: 001-29
+      author: Rahul Rao Gonda
+      preConditions:
+        - onFail: MARK_RAN
+          tableExists:
+            tableName: biometric_data
+      changes:
+        - dropTable:
+            tableName: biometric_data
+            cascadeConstraints: true
+
+  - changeSet:
+      id: 001-30
+      author: Rahul Rao Gonda
+      preConditions:
+        - onFail: MARK_RAN
+          tableExists:
+            tableName: payments
+      changes:
+        - dropTable:
+            tableName: payments
+            cascadeConstraints: true
+
+  - changeSet:
+      id: 001-31
+      author: Rahul Rao Gonda
+      preConditions:
+        - onFail: MARK_RAN
+          tableExists:
+            tableName: payment_methods
+      changes:
+        - dropTable:
+            tableName: payment_methods
+            cascadeConstraints: true
+
+  - changeSet:
+      id: 001-32
+      author: Rahul Rao Gonda
+      preConditions:
+        - onFail: MARK_RAN
+          tableExists:
+            tableName: notifications
+      changes:
+        - dropTable:
+            tableName: notifications
+            cascadeConstraints: true
+
+  - changeSet:
+      id: 001-33
+      author: Rahul Rao Gonda
+      preConditions:
+        - onFail: MARK_RAN
+          tableExists:
+            tableName: notification_types
+      changes:
+        - dropTable:
+            tableName: notification_types
+            cascadeConstraints: true
+
+  - changeSet:
+      id: 001-34
+      author: Rahul Rao Gonda
+      preConditions:
+        - onFail: MARK_RAN
+          tableExists:
+            tableName: unions
+      changes:
+        - dropTable:
+            tableName: unions
+            cascadeConstraints: true
+
+  - changeSet:
+      id: 001-35
+      author: Rahul Rao Gonda
+      preConditions:
+        - onFail: MARK_RAN
+          tableExists:
+            tableName: organisations
+      changes:
+        - dropTable:
+            tableName: organisations
+            cascadeConstraints: true
+
+  - changeSet:
+      id: 001-36
+      author: Rahul Rao Gonda
+      preConditions:
+        - onFail: MARK_RAN
+          tableExists:
+            tableName: entity_type
+      changes:
+        - dropTable:
+            tableName: entity_type
+            cascadeConstraints: true
+
+  - changeSet:
+      id: 001-37
+      author: Rahul Rao Gonda
+      preConditions:
+        - onFail: MARK_RAN
+          tableExists:
+            tableName: login_status
+      changes:
+        - dropTable:
+            tableName: login_status
+            cascadeConstraints: true

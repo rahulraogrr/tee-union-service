@@ -1,0 +1,223 @@
+databaseChangeLog:
+  - changeSet:
+      id: 005-1
+      author: Rahul Rao Gonda
+      comment: create-escalation-levels-table
+      changes:
+        - createTable:
+            tableName: escalation_levels
+            columns:
+              - column:
+                  name: id
+                  type: smallserial
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: sla_duration
+                  type: interval
+                  constraints:
+                    nullable: false
+              - column:
+                  name: escalate_to_role_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_escalate_to_role_id
+                    references: roles(id)
+              - column:
+                  name: description
+                  type: text
+
+  - changeSet:
+      id: 005-2
+      author: Rahul Rao Gonda
+      comment: create-priority-escalation-mapping-table
+      changes:
+        - createTable:
+            tableName: priority_escalation_mapping
+            columns:
+              - column:
+                  name: priority_id
+                  type: smallint
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_priority_id
+                    references: priorities(id)
+              - column:
+                  name: level_id
+                  type: smallint
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_level_id
+                    references: escalation_levels(id)
+              - constraints:
+                  unique:
+                    columns:
+                      - priority_id
+                      - level_id
+
+  - changeSet:
+      id: 005-3
+      author: Rahul Rao Gonda
+      comment: create-tickets-table
+      changes:
+        - createTable:
+            tableName: tickets
+            columns:
+              - column:
+                  name: id
+                  type: bigserial
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: user_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_user_id
+                    references: users(id)
+              - column:
+                  name: description
+                  type: text
+                  constraints:
+                    nullable: false
+              - column:
+                  name: status_id
+                  type: smallint
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_status_id
+                    references: ticket_statuses(id)
+              - column:
+                  name: current_level
+                  type: smallint
+                  constraints:
+                    nullable: false
+                    defaultValue: 1
+                    foreignKeyName: fk_current_level
+                    references: escalation_levels(id)
+              - column:
+                  name: priority_id
+                  type: smallint
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_priority_id
+                    references: priorities(id)
+              - column:
+                  name: assigned_to
+                  type: bigint
+                  constraints:
+                    nullable: true
+                    foreignKeyName: fk_assigned_to
+                    references: users(id)
+              - column:
+                  name: sla_due_at
+                  type: timestamp
+              - column:
+                  name: created_at
+                  type: timestamp
+                  constraints:
+                    nullable: false
+                    defaultValueComputed: CURRENT_TIMESTAMP
+              - column:
+                  name: updated_at
+                  type: timestamp
+                  constraints:
+                    nullable: false
+                    defaultValueComputed: CURRENT_TIMESTAMP
+
+  - changeSet:
+      id: 005-4
+      author: Rahul Rao Gonda
+      comment: create-ticket-logs-table
+      changes:
+        - createTable:
+            tableName: ticket_logs
+            columns:
+              - column:
+                  name: id
+                  type: bigserial
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: ticket_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_ticket_id
+                    references: tickets(id)
+              - column:
+                  name: action_id
+                  type: smallint
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_action_id
+                    references: log_actions(id)
+              - column:
+                  name: old_status_id
+                  type: smallint
+                  constraints:
+                    nullable: true
+                    foreignKeyName: fk_old_status_id
+                    references: ticket_statuses(id)
+              - column:
+                  name: new_status_id
+                  type: smallint
+                  constraints:
+                    nullable: true
+                    foreignKeyName: fk_new_status_id
+                    references: ticket_statuses(id)
+              - column:
+                  name: performed_by
+                  type: bigint
+                  constraints:
+                    nullable: true
+                    foreignKeyName: fk_performed_by
+                    references: users(id)
+              - column:
+                  name: details
+                  type: text
+              - column:
+                  name: created_at
+                  type: timestamp
+                  constraints:
+                    nullable: false
+                    defaultValueComputed: CURRENT_TIMESTAMP
+
+  - changeSet:
+      id: 005-5
+      author: Rahul Rao Gonda
+      comment: create-indexes-for-tickets-table
+      changes:
+        - createIndex:
+            indexName: idx_tickets_status
+            tableName: tickets
+            columns:
+              - column:
+                  name: status_id
+        - createIndex:
+            indexName: idx_tickets_assigned_to
+            tableName: tickets
+            columns:
+              - column:
+                  name: assigned_to
+        - createIndex:
+            indexName: idx_tickets_user_priority_status
+            tableName: tickets
+            columns:
+              - column:
+                  name: user_id
+              - column:
+                  name: priority_id
+              - column:
+                  name: status_id
+
+  - changeSet:
+      id: 005-6
+      author: Rahul Rao Gonda
+      comment: create-unique-constraint-for-ticket-assignment
+      changes:
+        - addUniqueConstraint:
+            tableName: tickets
+            columnNames: id, assigned_to
+            constraintName: unique_ticket_assignment

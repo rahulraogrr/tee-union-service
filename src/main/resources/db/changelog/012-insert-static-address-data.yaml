@@ -1,0 +1,4 @@
+databaseChangeLog:
+  - changeSet:
+      id: 013-insert-static-address-data
+      author: Rahul Rao Gonda
