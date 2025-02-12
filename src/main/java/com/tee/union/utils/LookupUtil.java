@@ -26,6 +26,10 @@ public class LookupUtil {
         lookupMap.put(LookupTable.PAYMENT_METHODS, PaymentMethodDto.class);
         lookupMap.put(LookupTable.LOGIN_STATUS, LoginStatusDto.class);
         lookupMap.put(LookupTable.PAYMENT_STATUS, PaymentStatusDto.class);
+        lookupMap.put(LookupTable.SECTORS, SectorDto.class);
+        lookupMap.put(LookupTable.OWNERSHIP_TYPE, OwnershipTypeDto.class);
+        lookupMap.put(LookupTable.OTP_TYPES, OtpTypeDto.class);
+        lookupMap.put(LookupTable.BLOOD_GROUPS, BloodGroupDto.class);
     }
 
     public Class<? extends BaseLookupDto> getDtoClass(LookupTable lookupTable) {

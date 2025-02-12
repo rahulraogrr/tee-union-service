@@ -8,8 +8,8 @@ databaseChangeLog:
         - insert:
             tableName: entity_type
             columns:
-              - column: { name: name, value: "USER" }
-              - column: { name: description, value: "An individual user" }
+              - column: { name: name, value: "MEMBER" }
+              - column: { name: description, value: "An individual member" }
               - column: { name: created_at, value: NOW() }
               - column: { name: updated_at, value: NOW() }
         - insert:
@@ -24,6 +24,13 @@ databaseChangeLog:
             columns:
               - column: { name: name, value: "UNION" }
               - column: { name: description, value: "A union entity" }
+              - column: { name: created_at, value: NOW() }
+              - column: { name: updated_at, value: NOW() }
+        - insert:
+            tableName: entity_type
+            columns:
+              - column: { name: name, value: "COMPANY" }
+              - column: { name: description, value: "A company entity" }
               - column: { name: created_at, value: NOW() }
               - column: { name: updated_at, value: NOW() }
 
@@ -163,6 +170,13 @@ databaseChangeLog:
               - column: { name: description, value: "Branch office address" }
               - column: { name: created_at, value: NOW() }
               - column: { name: updated_at, value: NOW() }
+        - insert:
+            tableName: address_types
+            columns:
+              - column: { name: name, value: "HEAD_OFFICE" }
+              - column: { name: description, value: "Head office address" }
+              - column: { name: created_at, value: NOW() }
+              - column: { name: updated_at, value: NOW() }
 
         # Insert data into notification_types
         - insert:
@@ -251,6 +265,13 @@ databaseChangeLog:
         - insert:
             tableName: roles
             columns:
+              - column: { name: name, value: "REGISTER" }
+              - column: { name: description, value: "register member" }
+              - column: { name: created_at, value: NOW() }
+              - column: { name: updated_at, value: NOW() }
+        - insert:
+            tableName: roles
+            columns:
               - column: { name: name, value: "ADMIN"}
               - column: { name: description, value: "Administrator with full access"}
               - column: { name: created_at, value: NOW() }
@@ -266,7 +287,7 @@ databaseChangeLog:
             tableName: roles
             columns:
               - column: { name: name, value: "USER" }
-              - column: { name: description, value: "Regular user with standard permissions" }
+              - column: { name: description, value: "Regular MEMBER with standard permissions" }
               - column: { name: created_at, value: NOW() }
               - column: { name: updated_at, value: NOW() }
         - insert:
@@ -280,7 +301,7 @@ databaseChangeLog:
             tableName: roles
             columns:
               - column: { name: name, value: "SUPER_USER" }
-              - column: { name: description, value: "User with elevated privileges" }
+              - column: { name: description, value: "MEMBER with elevated privileges" }
               - column: { name: created_at, value: NOW() }
               - column: { name: updated_at, value: NOW() }
 
@@ -400,7 +421,7 @@ databaseChangeLog:
               - column: { name: created_at, value: NOW() }
               - column: { name: updated_at, value: NOW() }
 
-        # Insert data into entity_type
+        # Insert data into payment_status
         - insert:
             tableName: payment_status
             columns:
@@ -427,5 +448,139 @@ databaseChangeLog:
             columns:
               - column: { name: name, value: "UNKNOWN" }
               - column: { name: description, value: "Unknown status" }
+              - column: { name: created_at, value: NOW() }
+              - column: { name: updated_at, value: NOW() }
+
+        # Insert data into sectors
+        - insert:
+            tableName: sectors
+            columns:
+              - column: { name: name, value: "GENERATION" }
+              - column: { name: description, value: "Power Generation Sector" }
+              - column: { name: created_at, value: NOW() }
+              - column: { name: updated_at, value: NOW() }
+        - insert:
+            tableName: sectors
+            columns:
+              - column: { name: name, value: "TRANSMISSION" }
+              - column: { name: description, value: "Power Transmission Sector" }
+              - column: { name: created_at, value: NOW() }
+              - column: { name: updated_at, value: NOW() }
+        - insert:
+            tableName: sectors
+            columns:
+              - column: { name: name, value: "DISTRIBUTION" }
+              - column: { name: description, value: "Power Distribution Sector" }
+              - column: { name: created_at, value: NOW() }
+              - column: { name: updated_at, value: NOW() }
+
+        # Insert data into ownership_type
+        - insert:
+            tableName: ownership_type
+            columns:
+              - column: { name: name, value: "GOVERNMENT" }
+              - column: { name: description, value: "Government Owned" }
+              - column: { name: created_at, value: NOW() }
+              - column: { name: updated_at, value: NOW() }
+        - insert:
+            tableName: ownership_type
+            columns:
+              - column: { name: name, value: "PRIVATE" }
+              - column: { name: description, value: "Privately Owned" }
+              - column: { name: created_at, value: NOW() }
+              - column: { name: updated_at, value: NOW() }
+        - insert:
+            tableName: ownership_type
+            columns:
+              - column: { name: name, value: "PUBLIC-PRIVATE" }
+              - column: { name: description, value: "Govt and private" }
+              - column: { name: created_at, value: NOW() }
+              - column: { name: updated_at, value: NOW() }
+
+        # Insert data into otp_types
+        - insert:
+            tableName: otp_types
+            columns:
+              - column: { name: name, value: "SMS" }
+              - column: { name: description, value: "SMS" }
+              - column: { name: created_at, value: NOW() }
+              - column: { name: updated_at, value: NOW() }
+        - insert:
+            tableName: otp_types
+            columns:
+              - column: { name: name, value: "EMAIL" }
+              - column: { name: description, value: "EMAIL" }
+              - column: { name: created_at, value: NOW() }
+              - column: { name: updated_at, value: NOW() }
+
+        # Insert data into blood_groups
+        - insert:
+            tableName: blood_groups
+            columns:
+              - column: { name: name, value: "A+" }
+              - column: { name: description, value: "A antigen with Rh factor" }
+              - column: { name: created_at, value: NOW() }
+              - column: { name: updated_at, value: NOW() }
+        - insert:
+            tableName: blood_groups
+            columns:
+              - column: { name: name, value: "A-" }
+              - column: { name: description, value: "A antigen without Rh factor" }
+              - column: { name: created_at, value: NOW() }
+              - column: { name: updated_at, value: NOW() }
+        - insert:
+            tableName: blood_groups
+            columns:
+              - column: { name: name, value: "B+" }
+              - column: { name: description, value: "B antigen with Rh factor" }
+              - column: { name: created_at, value: NOW() }
+              - column: { name: updated_at, value: NOW() }
+        - insert:
+            tableName: blood_groups
+            columns:
+              - column: { name: name, value: "B-" }
+              - column: { name: description, value: "B antigen without Rh factor" }
+              - column: { name: created_at, value: NOW() }
+              - column: { name: updated_at, value: NOW() }
+        - insert:
+            tableName: blood_groups
+            columns:
+              - column: { name: name, value: "AB+" }
+              - column: { name: description, value: "Both A and B antigens with Rh factor" }
+              - column: { name: created_at, value: NOW() }
+              - column: { name: updated_at, value: NOW() }
+        - insert:
+            tableName: blood_groups
+            columns:
+              - column: { name: name, value: "AB-" }
+              - column: { name: description, value: "Both A and B antigens without Rh factor" }
+              - column: { name: created_at, value: NOW() }
+              - column: { name: updated_at, value: NOW() }
+        - insert:
+            tableName: blood_groups
+            columns:
+              - column: { name: name, value: "O+" }
+              - column: { name: description, value: "Neither A nor B antigens, but with Rh factor" }
+              - column: { name: created_at, value: NOW() }
+              - column: { name: updated_at, value: NOW() }
+        - insert:
+            tableName: blood_groups
+            columns:
+              - column: { name: name, value: "O-" }
+              - column: { name: description, value: "Neither A nor B antigens, nor Rh factor" }
+              - column: { name: created_at, value: NOW() }
+              - column: { name: updated_at, value: NOW() }
+        - insert:
+            tableName: blood_groups
+            columns:
+              - column: { name: name, value: "BOMBAY" }
+              - column: { name: description, value: "Individuals with this blood group lack the H antigen, which is the precursor to the A and B antigens. This is extremely rare" }
+              - column: { name: created_at, value: NOW() }
+              - column: { name: updated_at, value: NOW() }
+        - insert:
+            tableName: blood_groups
+            columns:
+              - column: { name: name, value: "RH-NULL" }
+              - column: { name: description, value: "Individuals with this blood group lack all Rh antigens. It is also very rare and is sometimes referred to as the golden blood." }
               - column: { name: created_at, value: NOW() }
               - column: { name: updated_at, value: NOW() }

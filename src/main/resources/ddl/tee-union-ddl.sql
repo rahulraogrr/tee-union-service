@@ -5,11 +5,10 @@ DROP TABLE IF EXISTS escalation_levels CASCADE;
 DROP TABLE IF EXISTS addresses CASCADE;
 DROP TABLE IF EXISTS events CASCADE;
 DROP TABLE IF EXISTS event_types CASCADE;
-DROP TABLE IF EXISTS user_roles CASCADE;
-DROP TABLE IF EXISTS users CASCADE;
+DROP TABLE IF EXISTS members CASCADE;
+DROP TABLE IF EXISTS member_roles CASCADE;
 DROP TABLE IF EXISTS genders CASCADE;
 DROP TABLE IF EXISTS marital_statuses CASCADE;
-DROP TABLE IF EXISTS user_personal_details CASCADE;
 DROP TABLE IF EXISTS roles CASCADE;
 DROP TABLE IF EXISTS priorities CASCADE;
 DROP TABLE IF EXISTS log_actions CASCADE;
@@ -38,6 +37,13 @@ DROP TABLE IF EXISTS entity_type CASCADE;
 DROP TABLE IF EXISTS login_status CASCADE;
 DROP TABLE IF EXISTS logins CASCADE;
 DROP TABLE IF EXISTS payment_status CASCADE;
+DROP TABLE IF EXISTS member_role_history CASCADE;
+DROP TABLE IF EXISTS companies CASCADE;
+DROP TABLE IF EXISTS sectors CASCADE;
+DROP TABLE IF EXISTS ownership_type CASCADE;
+DROP TABLE IF EXISTS otp_types CASCADE;
+DROP TABLE IF EXISTS member_otp CASCADE;
+DROP TABLE IF EXISTS blood_groups CASCADE;
 DROP TABLE IF EXISTS databasechangelog CASCADE;
 DROP TABLE IF EXISTS databasechangeloglock CASCADE;
 
@@ -45,7 +51,7 @@ DROP TABLE IF EXISTS databasechangeloglock CASCADE;
 CREATE TABLE entity_type
 (
     id          SMALLSERIAL PRIMARY KEY,
-    name        VARCHAR(50) NOT NULL UNIQUE CHECK (name IN ('USER', 'ORGANISATION', 'UNION')),
+    name        VARCHAR(50) NOT NULL UNIQUE CHECK (name IN ('MEMBER', 'ORGANISATION', 'UNION', 'COMPANY')),
     description TEXT,
     created_at  TIMESTAMP DEFAULT NOW(),
     updated_at  TIMESTAMP DEFAULT NOW()
@@ -117,7 +123,7 @@ CREATE TABLE payment_status
 CREATE TABLE address_types
 (
     id          SMALLSERIAL PRIMARY KEY,
-    name        VARCHAR(50) NOT NULL UNIQUE CHECK (name IN ('HOME', 'WORK', 'BRANCH')),
+    name        VARCHAR(50) NOT NULL,
     description TEXT,
     created_at  TIMESTAMP DEFAULT NOW(),
     updated_at  TIMESTAMP DEFAULT NOW()
@@ -169,7 +175,7 @@ CREATE TABLE payment_methods
 CREATE TABLE roles
 (
     id          SMALLSERIAL PRIMARY KEY,
-    name        VARCHAR(50) NOT NULL UNIQUE, -- ADMIN, MANAGER, USER, IT, SUPER_USER
+    name        VARCHAR(50) NOT NULL UNIQUE, -- REGISTER, ADMIN, MANAGER, USER, IT, SUPER_USER
     description TEXT,
     created_at  TIMESTAMP DEFAULT NOW(),
     updated_at  TIMESTAMP DEFAULT NOW()
@@ -187,90 +193,80 @@ CREATE TABLE login_status
     updated_at  TIMESTAMP DEFAULT NOW()
 );
 
+CREATE TABLE sectors
+(
+    id          SMALLSERIAL PRIMARY KEY,
+    name        VARCHAR(50) NOT NULL UNIQUE CHECK (name IN
+                                                   ('GENERATION', 'TRANSMISSION', 'DISTRIBUTION')),
+    description TEXT,
+    created_at  TIMESTAMP DEFAULT NOW(),
+    updated_at  TIMESTAMP DEFAULT NOW()
+);
+
+CREATE TABLE ownership_type
+(
+    id          SMALLSERIAL PRIMARY KEY,
+    name        VARCHAR(50) NOT NULL UNIQUE CHECK (name IN
+                                                   ('GOVERNMENT', 'PRIVATE', 'PUBLIC-PRIVATE')),
+    description TEXT,
+    created_at  TIMESTAMP DEFAULT NOW(),
+    updated_at  TIMESTAMP DEFAULT NOW()
+);
+
+CREATE TABLE otp_types
+(
+    id          SMALLSERIAL PRIMARY KEY,
+    name        VARCHAR(50) NOT NULL UNIQUE CHECK (name IN
+                                                   ('EMAIL', 'SMS')),
+    description TEXT,
+    created_at  TIMESTAMP DEFAULT NOW(),
+    updated_at  TIMESTAMP DEFAULT NOW()
+);
+
+CREATE TABLE blood_groups
+(
+    id          SMALLSERIAL PRIMARY KEY,
+    name        VARCHAR(50) NOT NULL UNIQUE CHECK (name IN
+                                                   ('A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-','BOMBAY', 'RH-NULL')),
+    description TEXT,
+    created_at  TIMESTAMP DEFAULT NOW(),
+    updated_at  TIMESTAMP DEFAULT NOW()
+);
+
 -- Organisations Table
 CREATE TABLE organisations
 (
-    id          BIGSERIAL PRIMARY KEY,
+    id          SMALLSERIAL PRIMARY KEY,
     name        VARCHAR(255) NOT NULL UNIQUE,
     description TEXT,
     created_at  TIMESTAMP DEFAULT NOW(),
     updated_at  TIMESTAMP DEFAULT NOW()
 );
 
+CREATE TABLE companies
+(
+    id               SMALLSERIAL PRIMARY KEY,
+    organisation_id  SMALLINT NOT NULL REFERENCES organisations (id) ON DELETE CASCADE,
+    name             VARCHAR(100) NOT NULL UNIQUE,
+    sector_id        SMALLINT     NOT NULL REFERENCES sectors (id),
+    ownership_id     SMALLINT     NOT NULL REFERENCES ownership_type (id),
+    headquarters     VARCHAR(100),
+    established_date DATE,
+    created_at       TIMESTAMP DEFAULT NOW(),
+    updated_at       TIMESTAMP DEFAULT NOW(),
+    CONSTRAINT unique_company_per_organisation UNIQUE (name, organisation_id)
+);
+
 -- Unions Table
 CREATE TABLE unions
 (
-    id              BIGSERIAL PRIMARY KEY,
-    organisation_id BIGINT       NOT NULL REFERENCES organisations (id) ON DELETE CASCADE,
+    id              SMALLSERIAL PRIMARY KEY,
+    company_id      SMALLINT NOT NULL REFERENCES companies (id) ON DELETE CASCADE,
     name            VARCHAR(255) NOT NULL,
     description     TEXT,
     created_at      TIMESTAMP DEFAULT NOW(),
     updated_at      TIMESTAMP DEFAULT NOW(),
-    CONSTRAINT unique_union_per_organisation UNIQUE (name, organisation_id)
-);
-
--- Users Table
-CREATE TABLE users
-(
-    id                        BIGSERIAL PRIMARY KEY,
-    union_id                  BIGINT       REFERENCES unions (id) ON DELETE SET NULL,
-    first_name                VARCHAR(255) NOT NULL,
-    middle_name               VARCHAR(255),
-    last_name                 VARCHAR(255) NOT NULL,
-    phone                     VARCHAR(15) UNIQUE CHECK (phone ~ '^[0-9]+$'),
-    status_id                 SMALLINT     NOT NULL REFERENCES login_status (id) DEFAULT 1,
-    blood_group               VARCHAR(5),
-    marital_status_id         SMALLINT     NOT NULL REFERENCES marital_statuses (id),
-    marriage_anniversary_date DATE,
-    date_of_birth             DATE,
-    gender_id                 SMALLINT     NOT NULL REFERENCES genders (id),
-    nationality               VARCHAR(100),
-    created_at                TIMESTAMP    NOT NULL                              DEFAULT NOW(),
-    updated_at                TIMESTAMP    NOT NULL                              DEFAULT NOW(),
-    deleted_at                TIMESTAMP -- Soft delete
-);
-
--- Logins Table
-CREATE TABLE logins
-(
-    id                    BIGSERIAL PRIMARY KEY,
-    user_id               BIGINT      NOT NULL REFERENCES users (id) ON DELETE CASCADE,
-    login_type            VARCHAR(50) NOT NULL CHECK (login_type IN ('EMAIL', 'OAUTH', 'BIOMETRIC')),
-
-    -- Email Authentication
-    email                 VARCHAR(320) UNIQUE CHECK (login_type = 'EMAIL'),
-    password_hash         TEXT CHECK (login_type = 'EMAIL'),
-    password_salt         TEXT CHECK (login_type = 'EMAIL'),
-    password_last_changed TIMESTAMP            DEFAULT NOW(),
-    password_expires_at   TIMESTAMP            DEFAULT (NOW() + INTERVAL '90 days'),
-
-    -- OAuth Authentication
-    provider_name         VARCHAR(50) CHECK (login_type = 'OAUTH'), -- Google, Facebook, etc.
-    provider_user_id      VARCHAR(255) CHECK (login_type = 'OAUTH'),
-
-    -- Biometric Authentication
-    biometric_hash        TEXT CHECK (login_type = 'BIOMETRIC'),
-    is_biometric_enabled  BOOLEAN              DEFAULT FALSE,
-
-    login_status_id       SMALLINT    NOT NULL REFERENCES login_status (id),
-
-    created_at            TIMESTAMP   NOT NULL DEFAULT NOW(),
-    updated_at            TIMESTAMP   NOT NULL DEFAULT NOW(),
-
-    UNIQUE (user_id, login_type, provider_name)                     -- Prevent duplicate authentication types per user
-);
-
--- User OTP Table
-CREATE TABLE user_otp
-(
-    id          BIGSERIAL PRIMARY KEY,
-    login_id    BIGINT      NOT NULL REFERENCES logins (id),
-    otp_code    VARCHAR(10) NOT NULL,
-    otp_type    VARCHAR(50) NOT NULL CHECK (otp_type IN ('EMAIL', 'SMS')),
-    created_at  TIMESTAMP   NOT NULL DEFAULT NOW(),
-    expires_at  TIMESTAMP   NOT NULL,
-    is_verified BOOLEAN              DEFAULT FALSE,
-    UNIQUE (login_id, otp_type)
+    CONSTRAINT unique_union_per_company UNIQUE (name, company_id)
 );
 
 -- Political Status Table
@@ -303,7 +299,9 @@ CREATE TABLE countries
     region_id      BIGINT       NOT NULL REFERENCES regions (id) ON DELETE CASCADE,
     status_id      BIGINT       NOT NULL REFERENCES political_status (id) ON DELETE RESTRICT,
     created_at     TIMESTAMP DEFAULT now(),
-    updated_at     TIMESTAMP DEFAULT now()
+    updated_at     TIMESTAMP DEFAULT now(),
+    CONSTRAINT unique_iso_alpha2 UNIQUE (iso_alpha2),
+    CONSTRAINT unique_iso_alpha3 UNIQUE (iso_alpha3)
 );
 
 -- States Table
@@ -315,7 +313,8 @@ CREATE TABLE states
     country_id BIGINT       NOT NULL REFERENCES countries (id) ON DELETE CASCADE,
     created_at TIMESTAMP DEFAULT now(),
     updated_at TIMESTAMP DEFAULT now(),
-    CONSTRAINT unique_state_per_country UNIQUE (name, country_id)
+    CONSTRAINT unique_state_per_country UNIQUE (name, country_id),
+    CONSTRAINT unique_state_code UNIQUE (code)
 );
 
 -- Districts Table
@@ -326,7 +325,8 @@ CREATE TABLE districts
     state_id   BIGINT       NOT NULL REFERENCES states (id) ON DELETE CASCADE,
     created_at TIMESTAMP DEFAULT now(),
     updated_at TIMESTAMP DEFAULT now(),
-    CONSTRAINT unique_county_per_state UNIQUE (name, state_id)
+    CONSTRAINT unique_district_per_state UNIQUE (name, state_id),
+    CONSTRAINT unique_district_name UNIQUE (name)
 );
 
 -- Cities Table
@@ -344,8 +344,7 @@ CREATE TABLE cities
 CREATE TABLE addresses
 (
     id            BIGSERIAL PRIMARY KEY,
-    entity_id     BIGINT       NOT NULL,                               -- ID of the related entity (user, organisation, or union)
-    entity_type   VARCHAR(50)  NOT NULL,                               -- Type of the entity (user, organisation, union)
+    entity_id     SMALLINT NOT NULL REFERENCES entity_type (id), -- ID of the related entity (member, company , organisation, or union)
     house_no      VARCHAR(255),
     building_name VARCHAR(255),
     street        VARCHAR(255) NOT NULL,
@@ -358,11 +357,110 @@ CREATE TABLE addresses
     updated_at    TIMESTAMP    NOT NULL DEFAULT NOW()
 );
 
+-- Members Table
+CREATE TABLE members
+(
+    id                        BIGSERIAL PRIMARY KEY,
+    union_id                  SMALLINT REFERENCES unions (id) ON DELETE SET NULL,
+    first_name                VARCHAR(255) NOT NULL,
+    middle_name               VARCHAR(255),
+    last_name                 VARCHAR(255) NOT NULL,
+    phone                     VARCHAR(15) UNIQUE CHECK (phone ~ '^[0-9]+$'),
+    status_id                 SMALLINT     NOT NULL REFERENCES login_status (id) DEFAULT 1,
+    blood_group_id            SMALLINT NOT NULL REFERENCES blood_groups (id),
+    marital_status_id         SMALLINT NOT NULL REFERENCES marital_statuses (id),
+    marriage_anniversary_date DATE,
+    date_of_birth             DATE,
+    gender_id                 SMALLINT  NOT NULL REFERENCES genders (id),
+    nationality               BIGINT  NOT NULL REFERENCES countries (id),
+    created_at                TIMESTAMP    NOT NULL                              DEFAULT NOW(),
+    updated_at                TIMESTAMP    NOT NULL                              DEFAULT NOW(),
+    deleted_at                TIMESTAMP -- Soft delete,
+        CONSTRAINT chk_phone_format CHECK (phone ~ '^[0-9]{10,15}$')
+);
+
+CREATE TABLE member_roles
+(
+    member_id BIGINT    NOT NULL REFERENCES members (id) ON DELETE CASCADE,
+    role_id   SMALLINT  NOT NULL REFERENCES roles (id) ON DELETE CASCADE,
+    status VARCHAR(20) DEFAULT 'ACTIVE' CHECK (status IN ('ACTIVE', 'INACTIVE')),
+    created_at TIMESTAMP DEFAULT NOW(),
+    PRIMARY KEY (member_id, role_id), -- Ensure unique member-role combinations
+    CONSTRAINT fk_member_roles_member_id FOREIGN KEY (member_id) REFERENCES members (id) ON DELETE CASCADE,
+    CONSTRAINT fk_member_roles_role_id FOREIGN KEY (role_id) REFERENCES roles (id) ON DELETE CASCADE
+);
+
+COMMENT ON TABLE member_roles IS 'Maps members to their roles.';
+COMMENT ON COLUMN member_roles.member_id IS 'The ID of the member.';
+COMMENT ON COLUMN member_roles.role_id IS 'The ID of the role.';
+
+CREATE TABLE member_role_history
+(
+    id          BIGSERIAL PRIMARY KEY,
+    member_id   BIGINT    NOT NULL REFERENCES members (id) ON DELETE CASCADE,
+    role_id     SMALLINT  NOT NULL REFERENCES roles (id) ON DELETE CASCADE,
+    action      VARCHAR(10) NOT NULL CHECK (action IN ('ASSIGNED', 'REMOVED')), -- Track whether the role was assigned or removed
+    performed_by BIGINT REFERENCES members (id), -- Who performed the action (if applicable)
+    created_at  TIMESTAMP DEFAULT NOW(), -- When the action was performed
+    CONSTRAINT unique_role_history UNIQUE (member_id, role_id, action, created_at)
+);
+
+ALTER TABLE member_role_history
+    ALTER COLUMN action SET NOT NULL,
+    ALTER COLUMN created_at SET NOT NULL;
+
+-- Logins Table
+CREATE TABLE logins
+(
+    id                    BIGSERIAL PRIMARY KEY,
+    member_id             BIGINT      NOT NULL REFERENCES members (id) ON DELETE CASCADE,
+    login_type            VARCHAR(50) NOT NULL CHECK (login_type IN ('EMAIL', 'OAUTH', 'BIOMETRIC')),
+
+    -- Email Authentication
+    email                 VARCHAR(320) UNIQUE CHECK (login_type = 'EMAIL'),
+    password_hash         TEXT CHECK (login_type = 'EMAIL'),
+    password_salt         TEXT CHECK (login_type = 'EMAIL'),
+    password_last_changed TIMESTAMP            DEFAULT NOW(),
+    password_expires_at   TIMESTAMP            DEFAULT (NOW() + INTERVAL '90 days'),
+
+    -- OAuth Authentication
+    provider_name         VARCHAR(50) CHECK (login_type = 'OAUTH'), -- Google, Facebook, etc.
+    provider_user_id      VARCHAR(255) CHECK (login_type = 'OAUTH'),
+
+    -- Biometric Authentication
+    biometric_hash        TEXT CHECK (login_type = 'BIOMETRIC'),
+    is_biometric_enabled  BOOLEAN              DEFAULT FALSE,
+
+    login_status_id       SMALLINT    NOT NULL REFERENCES login_status (id),
+
+    created_at            TIMESTAMP   NOT NULL DEFAULT NOW(),
+    updated_at            TIMESTAMP   NOT NULL DEFAULT NOW(),
+
+    UNIQUE (member_id, login_type, provider_name),-- Prevent duplicate authentication types per member
+    CONSTRAINT chk_email_format CHECK (email ~ '^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$'),
+    CONSTRAINT unique_email UNIQUE (email)
+);
+
+-- Member OTP Table
+CREATE TABLE member_otp
+(
+    id          BIGSERIAL PRIMARY KEY,
+    login_id    BIGINT      NOT NULL REFERENCES logins (id),
+    otp_code    VARCHAR(10) NOT NULL,
+    otp_type_id    SMALLINT     NOT NULL REFERENCES otp_types (id),
+    created_at  TIMESTAMP   NOT NULL DEFAULT NOW(),
+    expires_at  TIMESTAMP   NOT NULL,
+    is_verified BOOLEAN              DEFAULT FALSE,
+    UNIQUE (login_id, otp_type_id),
+    CONSTRAINT unique_otp_code UNIQUE (otp_code)
+);
+
+
 -- Events Table
 CREATE TABLE events
 (
     id            BIGSERIAL PRIMARY KEY,
-    organizer_id  BIGINT       NOT NULL REFERENCES users (id),
+    organizer_id  BIGINT       NOT NULL REFERENCES members (id),
     name          VARCHAR(255) NOT NULL,
     description   TEXT,
     event_date    TIMESTAMP    NOT NULL,
@@ -393,15 +491,16 @@ CREATE TABLE priority_escalation_mapping
 CREATE TABLE tickets
 (
     id            BIGSERIAL PRIMARY KEY,
-    user_id       BIGINT    NOT NULL REFERENCES users (id),
+    member_id       BIGINT    NOT NULL REFERENCES members (id),
     description   TEXT      NOT NULL,
     status_id     SMALLINT  NOT NULL REFERENCES ticket_statuses (id),
     current_level SMALLINT  NOT NULL DEFAULT 1 REFERENCES escalation_levels (id),
     priority_id   SMALLINT  NOT NULL REFERENCES priorities (id),
-    assigned_to   BIGINT REFERENCES users (id),
+    assigned_to   BIGINT REFERENCES members (id),
     sla_due_at    TIMESTAMP,
     created_at    TIMESTAMP NOT NULL DEFAULT NOW(),
     updated_at    TIMESTAMP NOT NULL DEFAULT NOW()
+    --CONSTRAINT unique_ticket_description UNIQUE (description)
 );
 
 -- Ticket Logs Table
@@ -412,7 +511,7 @@ CREATE TABLE ticket_logs
     action_id     SMALLINT  NOT NULL REFERENCES log_actions (id),
     old_status_id SMALLINT REFERENCES ticket_statuses (id),
     new_status_id SMALLINT REFERENCES ticket_statuses (id),
-    performed_by  BIGINT REFERENCES users (id),
+    performed_by  BIGINT REFERENCES members (id),
     details       TEXT,
     created_at    TIMESTAMP NOT NULL DEFAULT NOW()
 );
@@ -421,7 +520,7 @@ CREATE TABLE ticket_logs
 CREATE TABLE payments
 (
     id             BIGSERIAL,
-    user_id        BIGINT         NOT NULL REFERENCES users (id),
+    member_id        BIGINT         NOT NULL REFERENCES members (id),
     event_id       BIGINT REFERENCES events (id),
     amount         DECIMAL(10, 2) NOT NULL,
     method_id      SMALLINT       NOT NULL REFERENCES payment_methods (id),
@@ -453,12 +552,13 @@ CREATE UNIQUE INDEX payments_transaction_id_unique
 CREATE TABLE notifications
 (
     id         BIGSERIAL PRIMARY KEY,
-    user_id    BIGINT REFERENCES users (id),
+    member_id    BIGINT REFERENCES members (id),
     type_id    SMALLINT     NOT NULL REFERENCES notification_types (id),
     title      VARCHAR(255) NOT NULL,
     message    TEXT         NOT NULL,
     is_read    BOOLEAN               DEFAULT FALSE,
-    created_at TIMESTAMP    NOT NULL DEFAULT NOW()
+    created_at TIMESTAMP    NOT NULL DEFAULT NOW(),
+    CONSTRAINT unique_notification UNIQUE (member_id, type_id, title)
 );
 
 -- Define audit_logs as a partitioned table
@@ -468,38 +568,42 @@ CREATE TABLE audit_logs
     table_name     VARCHAR(100) NOT NULL,
     operation      VARCHAR(50)  NOT NULL,
     record_id      BIGINT       NOT NULL,
-    changed_by     BIGINT REFERENCES users (id),
+    changed_by     BIGINT REFERENCES members (id),
     change_details JSONB,
     created_at     TIMESTAMP DEFAULT now(),
     PRIMARY KEY (id, created_at) -- Include the partition key in the primary key
 ) PARTITION BY RANGE (created_at);
 
 -- Indexes for Performance
--- Users
-CREATE INDEX idx_users_email ON logins (email);
-CREATE INDEX idx_users_phone ON users (phone) WHERE deleted_at IS NULL;
-CREATE INDEX idx_users_status ON users (status_id);
+-- Members
+CREATE INDEX idx_members_email ON logins (email);
+CREATE INDEX idx_members_phone ON members (phone) WHERE deleted_at IS NULL;
+CREATE INDEX idx_members_status ON members (status_id);
+CREATE INDEX idx_member_roles_member_id ON member_roles (member_id);
+CREATE INDEX idx_member_roles_role_id ON member_roles (role_id);
+CREATE INDEX idx_member_role_history_member_id ON member_role_history (member_id);
+CREATE INDEX idx_member_role_history_role_id ON member_role_history (role_id);
 
 -- Addresses
-CREATE INDEX idx_addresses_entity_type_city ON addresses (entity_type, entity_id, city_id);
+CREATE INDEX idx_addresses_entity_type_city ON addresses (entity_id, city_id);
 
 -- Events
 CREATE INDEX idx_events_event_date ON events (event_date);
 
 -- Payments
-CREATE INDEX idx_payments_user_id ON payments (user_id);
+CREATE INDEX idx_payments_member_id ON payments (member_id);
 CREATE INDEX idx_payments_event_id ON payments (event_id);
 CREATE INDEX idx_payments_status ON payments (status);
 
 -- Notifications
-CREATE INDEX idx_notifications_user_id ON notifications (user_id);
+CREATE INDEX idx_notifications_member_id ON notifications (member_id);
 CREATE INDEX idx_notifications_type_id ON notifications (type_id);
 CREATE INDEX idx_notifications_is_read ON notifications (is_read);
 
 -- Tickets
 CREATE INDEX idx_tickets_status ON tickets (status_id);
 CREATE INDEX idx_tickets_assigned_to ON tickets (assigned_to);
-CREATE INDEX idx_tickets_user_priority_status ON tickets (user_id, priority_id, status_id);
+CREATE INDEX idx_tickets_member_priority_status ON tickets (member_id, priority_id, status_id);
 
 -- Unique Constraints
 ALTER TABLE tickets
@@ -519,9 +623,9 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-CREATE TRIGGER audit_users_trigger
+CREATE TRIGGER audit_members_trigger
     AFTER UPDATE
-    ON users
+    ON members
     FOR EACH ROW
 EXECUTE FUNCTION audit_trigger_func();
 
@@ -550,6 +654,55 @@ BEGIN
     END IF;
 END;
 $$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION assign_default_role()
+    RETURNS TRIGGER AS
+$$
+BEGIN
+    -- Assign the default role (e.g., USER with role_id = 1)
+    INSERT INTO member_roles (member_id, role_id)
+    VALUES (NEW.id, 1); -- Replace 1 with the default role_id
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER assign_default_role_trigger
+    AFTER INSERT
+    ON members
+    FOR EACH ROW
+EXECUTE FUNCTION assign_default_role();
+
+CREATE OR REPLACE FUNCTION log_role_assignment()
+    RETURNS TRIGGER AS
+$$
+BEGIN
+    INSERT INTO member_role_history (member_id, role_id, action, performed_by, created_at)
+    VALUES (NEW.member_id, NEW.role_id, 'ASSIGNED', NEW.member_id, NOW()); -- Assuming the member performs the action
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER log_role_assignment_trigger
+    AFTER INSERT
+    ON member_roles
+    FOR EACH ROW
+EXECUTE FUNCTION log_role_assignment();
+
+CREATE OR REPLACE FUNCTION log_role_removal()
+    RETURNS TRIGGER AS
+$$
+BEGIN
+    INSERT INTO member_role_history (member_id, role_id, action, performed_by, created_at)
+    VALUES (OLD.member_id, OLD.role_id, 'REMOVED', OLD.member_id, NOW()); -- Assuming the member performs the action
+    RETURN OLD;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER log_role_removal_trigger
+    AFTER DELETE
+    ON member_roles
+    FOR EACH ROW
+EXECUTE FUNCTION log_role_removal();
 
 -- Create yearly partitions for audit_logs
 CREATE TABLE audit_logs_2023 PARTITION OF audit_logs

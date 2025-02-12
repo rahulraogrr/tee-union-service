@@ -1,5 +1,8 @@
 package com.tee.union.dto.staticdata;
 
+/**
+ * Static tables enum
+ */
 public enum LookupTable {
     ENTITY_TYPE("entity_type", "EntityTypeDto"),
     TICKET_STATUSES("ticket_statuses", "TicketStatusDto"),
@@ -13,7 +16,11 @@ public enum LookupTable {
     MARITAL_STATUSES("marital_statuses", "MaritalStatusDto"),
     PAYMENT_METHODS("payment_methods", "PaymentMethodDto"),
     LOGIN_STATUS("login_status", "LoginStatusDto"),
-    PAYMENT_STATUS("payment_status", "PaymentStatusDto");
+    PAYMENT_STATUS("payment_status", "PaymentStatusDto"),
+    SECTORS("sectors", "SectorDto"),
+    OWNERSHIP_TYPE("ownership_type", "OwnershipTypeDto"),
+    OTP_TYPES("otp_types", "OtpTypeDto"),
+    BLOOD_GROUPS("blood_groups", "BloodGroupDto");
 
     private final String tableName;
     private final String className;
