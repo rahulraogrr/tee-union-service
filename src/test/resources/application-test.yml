@@ -1,0 +1,21 @@
+spring:
+  datasource:
+    url: jdbc:tc:postgresql:17.2://localhost/testdb
+    username: postgres
+    password: postgres
+    driver-class-name: org.testcontainers.jdbc.ContainerDatabaseDriver
+
+  data:
+    redis:
+      host: ${spring.data.redis.host}
+      port: ${spring.data.redis.port}
+      timeout: 60000
+
+  spring:
+    liquibase:
+      change-log: classpath:/db/changelog/db.changelog-master.yaml
+      default-schema: teeunion
+    jpa:
+      properties:
+        hibernate:
+          default_schema: teeunion
