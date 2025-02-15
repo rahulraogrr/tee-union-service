@@ -147,6 +147,20 @@ databaseChangeLog:
               - column: { name: description, value: "User has retired" }
               - column: { name: created_at, value: NOW() }
               - column: { name: updated_at, value: NOW() }
+        - insert:
+            tableName: user_statuses
+            columns:
+              - column: { name: name, value: "UNDER_VERIFICATION" }
+              - column: { name: description, value: "User under verification" }
+              - column: { name: created_at, value: NOW() }
+              - column: { name: updated_at, value: NOW() }
+        - insert:
+            tableName: user_statuses
+            columns:
+              - column: { name: name, value: "CREATED" }
+              - column: { name: description, value: "User created" }
+              - column: { name: created_at, value: NOW() }
+              - column: { name: updated_at, value: NOW() }
 
         # Insert data into address_types
         - insert:
@@ -198,6 +212,13 @@ databaseChangeLog:
             columns:
               - column: { name: name, value: "EMERGENCY" }
               - column: { name: description, value: "Emergency notification" }
+              - column: { name: created_at, value: NOW() }
+              - column: { name: updated_at, value: NOW() }
+        - insert:
+            tableName: notification_types
+            columns:
+              - column: { name: name, value: "SECURITY_ALERT" }
+              - column: { name: description, value: "Suspicious Login Attempt" }
               - column: { name: created_at, value: NOW() }
               - column: { name: updated_at, value: NOW() }
 
@@ -512,6 +533,13 @@ databaseChangeLog:
               - column: { name: description, value: "EMAIL" }
               - column: { name: created_at, value: NOW() }
               - column: { name: updated_at, value: NOW() }
+        - insert:
+            tableName: otp_types
+            columns:
+              - column: { name: name, value: "WHATSAPP" }
+              - column: { name: description, value: "WHATSAPP" }
+              - column: { name: created_at, value: NOW() }
+              - column: { name: updated_at, value: NOW() }
 
         # Insert data into blood_groups
         - insert:
@@ -582,5 +610,72 @@ databaseChangeLog:
             columns:
               - column: { name: name, value: "RH-NULL" }
               - column: { name: description, value: "Individuals with this blood group lack all Rh antigens. It is also very rare and is sometimes referred to as the golden blood." }
+              - column: { name: created_at, value: NOW() }
+              - column: { name: updated_at, value: NOW() }
+
+        # Insert data into login_types
+        - insert:
+            tableName: login_types
+            columns:
+              - column: { name: name, value: "EMAIL" }
+              - column: { name: description, value: "EMAIL" }
+              - column: { name: created_at, value: NOW() }
+              - column: { name: updated_at, value: NOW() }
+        - insert:
+            tableName: login_types
+            columns:
+              - column: { name: name, value: "OAUTH" }
+              - column: { name: description, value: "OAUTH login using Google, Facebook, Apple" }
+              - column: { name: created_at, value: NOW() }
+              - column: { name: updated_at, value: NOW() }
+        - insert:
+            tableName: login_types
+            columns:
+              - column: { name: name, value: "BIOMETRIC" }
+              - column: { name: description, value: "BIOMETRIC" }
+              - column: { name: created_at, value: NOW() }
+              - column: { name: updated_at, value: NOW() }
+        - insert:
+            tableName: login_types
+            columns:
+              - column: { name: name, value: "MOBILE" }
+              - column: { name: description, value: "MOBILE" }
+              - column: { name: created_at, value: NOW() }
+              - column: { name: updated_at, value: NOW() }
+
+        # Insert data into mfa_types
+        - insert:
+            tableName: mfa_types
+            columns:
+              - column: { name: name, value: "TOTP" }
+              - column: { name: description, value: "Time-based One-Time Password" }
+              - column: { name: created_at, value: NOW() }
+              - column: { name: updated_at, value: NOW() }
+        - insert:
+            tableName: mfa_types
+            columns:
+              - column: { name: name, value: "SMS" }
+              - column: { name: description, value: "SMS" }
+              - column: { name: created_at, value: NOW() }
+              - column: { name: updated_at, value: NOW() }
+        - insert:
+            tableName: mfa_types
+            columns:
+              - column: { name: name, value: "EMAIL" }
+              - column: { name: description, value: "EMAIL" }
+              - column: { name: created_at, value: NOW() }
+              - column: { name: updated_at, value: NOW() }
+        - insert:
+            tableName: mfa_types
+            columns:
+              - column: { name: name, value: "BIOMETRIC" }
+              - column: { name: description, value: "BIOMETRIC" }
+              - column: { name: created_at, value: NOW() }
+              - column: { name: updated_at, value: NOW() }
+        - insert:
+            tableName: mfa_types
+            columns:
+              - column: { name: name, value: "BACKUP_CODE" }
+              - column: { name: description, value: "BACKUP_CODE" }
               - column: { name: created_at, value: NOW() }
               - column: { name: updated_at, value: NOW() }

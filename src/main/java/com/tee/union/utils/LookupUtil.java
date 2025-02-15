@@ -30,6 +30,8 @@ public class LookupUtil {
         lookupMap.put(LookupTable.OWNERSHIP_TYPE, OwnershipTypeDto.class);
         lookupMap.put(LookupTable.OTP_TYPES, OtpTypeDto.class);
         lookupMap.put(LookupTable.BLOOD_GROUPS, BloodGroupDto.class);
+        lookupMap.put(LookupTable.LOGIN_TYPES, LoginTypeDto.class);
+        lookupMap.put(LookupTable.MFA_TYPES, MfaTypeDto.class);
     }
 
     public Class<? extends BaseLookupDto> getDtoClass(LookupTable lookupTable) {

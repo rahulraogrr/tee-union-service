@@ -20,7 +20,9 @@ public enum LookupTable {
     SECTORS("sectors", "SectorDto"),
     OWNERSHIP_TYPE("ownership_type", "OwnershipTypeDto"),
     OTP_TYPES("otp_types", "OtpTypeDto"),
-    BLOOD_GROUPS("blood_groups", "BloodGroupDto");
+    BLOOD_GROUPS("blood_groups", "BloodGroupDto"),
+    LOGIN_TYPES("login_types", "LoginTypeDto"),
+    MFA_TYPES("mfa_types", "MfaTypeDto");
 
     private final String tableName;
     private final String className;
